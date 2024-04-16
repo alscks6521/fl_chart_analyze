@@ -12,18 +12,10 @@ class HealthDataProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // bool isSameDay(DateTime date1, DateTime date2) {
-  //   return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
-  // }
-
   List<HealthData> getDataForDay(DateTime day) {
     return _healthDataList.where((data) {
+      // 세 조건 모두 참이면, 해당 data 객체는 결과 리스트에 포함된다,
       return data.date.year == day.year && data.date.month == day.month && data.date.day == day.day;
     }).toList();
-    // for (var a in _healthDataList) {
-    //   debugPrint("내용: ${a.date}");
-    // }
-
-    // return _healthDataList.where((data) => isSameDay(data.date, day)).toList();
   }
 }
