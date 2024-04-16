@@ -33,7 +33,8 @@ HealthDataProvider에 데이터를 읽고 차트로 시각화.
 
 🔵 수축기선 / 🔴 이완기선 / 🟣 혈당선 / 🟢 각 적정선  
 <img width="270" alt="image" src="https://github.com/alscks6521/fl_chart_analyze/assets/112923685/555beb8e-718f-4d7b-bcf2-f7536dc5d0f1">  
-  
-#### Calendar   
-HealthDataProvider에 데이터를 읽고 캘린더로 시각화.
+<hr>
+
+#### Calendar  
+HealthDataProvider에 데이터를 읽고 캘린더로 시각화.  
 <img width="270" alt="image" src="https://github.com/alscks6521/fl_chart_analyze/assets/112923685/23d2412a-39ab-4faa-af7a-60a2b9d85996">
