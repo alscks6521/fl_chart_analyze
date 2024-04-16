@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:measurement/HealthData.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -29,11 +32,13 @@ class _HomePageState extends State<HomePage> {
   void addHealthData() {
     // 입력 값 검증
     if (_formKey.currentState!.validate()) {
+      final now = DateTime.now();
       final systolicBP = int.tryParse(systolicBPController.text) ?? 0;
       final diastolicBP = int.tryParse(diastolicBPController.text) ?? 0;
       final bloodSugar = int.tryParse(bloodSugarController.text) ?? 0;
 
       final newData = HealthData(
+        date: now,
         systolicBP: systolicBP,
         diastolicBP: diastolicBP,
         bloodSugar: bloodSugar,
@@ -44,9 +49,9 @@ class _HomePageState extends State<HomePage> {
         healthDataList.add(newData);
       });
 
-      systolicBPController.clear();
-      diastolicBPController.clear();
-      bloodSugarController.clear();
+      // systolicBPController.clear();
+      // diastolicBPController.clear();
+      // bloodSugarController.clear();
     }
   }
 
@@ -77,6 +82,9 @@ class _HomePageState extends State<HomePage> {
                             height: 200,
                             // 혈압 차트 위젯
                             child: _buildBloodPressureChart(),
+                          ),
+                          const SizedBox(
+                            height: 30,
                           ),
                           SizedBox(
                             height: 200,
@@ -138,34 +146,59 @@ class _HomePageState extends State<HomePage> {
     if (healthDataList.isEmpty) {
       return Container();
     }
-    return LineChart(
-      LineChartData(
-        lineBarsData: [
-          // 수축기 혈압 데이터를 플롯으로 변환
-          _buildLineChartBarData(
-            healthDataList.asMap().entries.map((entry) {
-              final index = entry.key;
-              final data = entry.value;
-              return FlSpot(index.toDouble(), data.systolicBP.toDouble());
-            }).toList(),
-            Colors.blue.withOpacity(0.7),
+    final width = MediaQuery.of(context).size.width;
+
+    final chartWidth = healthDataList.length * 60.0; // 데이터 포인트 수에 따라 차트 너비 설정
+    final isScrollable = chartWidth > width; // 스크롤 여부 결정
+
+    // 최근 10개의 데이터만 표시
+    final recentDataList = healthDataList.length > 10
+        ? healthDataList.sublist(healthDataList.length - 10)
+        : healthDataList;
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: SizedBox(
+        width: isScrollable ? chartWidth : width, // 스크롤 가능 시 차트 너비, 아닐 시 화면 너비
+        // height: 200,
+        child: LineChart(
+          LineChartData(
+            lineBarsData: [
+              // 수축기 혈압 데이터를 플롯으로 변환
+              _buildLineChartBarData(
+                recentDataList.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final data = entry.value;
+                  return FlSpot(index.toDouble(), data.systolicBP.toDouble());
+                }).toList(),
+                Colors.blue.withOpacity(0.7),
+              ),
+              // 이완기 혈압 데이터를 플롯으로 변환
+              _buildLineChartBarData(
+                recentDataList.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final data = entry.value;
+                  return FlSpot(index.toDouble(), data.diastolicBP.toDouble());
+                }).toList(),
+                Colors.red.withOpacity(0.7),
+              ),
+              // 적정 수축기 혈압 라인
+              _buildNormalLineChartBarData(
+                recentDataList.length,
+                120,
+                Colors.green.withOpacity(0.8),
+              ),
+              // 적정 이완기 혈압 라인
+              _buildNormalLineChartBarData(
+                recentDataList.length,
+                80,
+                const Color.fromARGB(255, 16, 87, 18).withOpacity(0.8),
+              ),
+            ],
+            // 차트 축 설정
+            titlesData: _buildTitlesData(),
           ),
-          // 이완기 혈압 데이터를 플롯으로 변환
-          _buildLineChartBarData(
-            healthDataList.asMap().entries.map((entry) {
-              final index = entry.key;
-              final data = entry.value;
-              return FlSpot(index.toDouble(), data.diastolicBP.toDouble());
-            }).toList(),
-            Colors.red.withOpacity(0.7),
-          ),
-          // 적정 수축기 혈압 라인
-          _buildNormalLineChartBarData(120, Colors.green.withOpacity(0.8)),
-          // 적정 이완기 혈압 라인
-          _buildNormalLineChartBarData(80, const Color.fromARGB(255, 16, 87, 18).withOpacity(0.8)),
-        ],
-        // 차트 축 설정
-        titlesData: _buildTitlesData(),
+        ),
       ),
     );
   }
@@ -175,20 +208,40 @@ class _HomePageState extends State<HomePage> {
     if (healthDataList.isEmpty) {
       return Container();
     }
-    return LineChart(
-      LineChartData(
-        lineBarsData: [
-          _buildLineChartBarData(
-            healthDataList.asMap().entries.map((entry) {
-              final index = entry.key;
-              final data = entry.value;
-              return FlSpot(index.toDouble(), data.bloodSugar.toDouble());
-            }).toList(),
-            Colors.purple.withOpacity(0.8),
+    final width = MediaQuery.of(context).size.width;
+
+    final chartWidth = healthDataList.length * 60.0; // 데이터 포인트 수에 따라 차트 너비 설정
+    final isScrollable = chartWidth > width; // 스크롤 여부 결정
+
+    // 최근 10개의 데이터만 표시
+    final recentDataList = healthDataList.length > 10
+        ? healthDataList.sublist(healthDataList.length - 10)
+        : healthDataList;
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: SizedBox(
+        width: isScrollable ? chartWidth : width,
+        child: LineChart(
+          LineChartData(
+            lineBarsData: [
+              _buildLineChartBarData(
+                recentDataList.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final data = entry.value;
+                  return FlSpot(index.toDouble(), data.bloodSugar.toDouble());
+                }).toList(),
+                Colors.purple.withOpacity(0.8),
+              ),
+              _buildNormalLineChartBarData(
+                recentDataList.length,
+                100,
+                Colors.green.withOpacity(0.8),
+              ),
+            ],
+            titlesData: _buildTitlesData(),
           ),
-          _buildNormalLineChartBarData(100, Colors.green.withOpacity(0.8)),
-        ],
-        titlesData: _buildTitlesData(),
+        ),
       ),
     );
   }
@@ -206,20 +259,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// 적정 라인을 생성하는 함수
-  LineChartBarData _buildNormalLineChartBarData(double value, Color color) {
-    if (healthDataList.isEmpty) {
-      return LineChartBarData(
-        spots: [],
-        isCurved: false,
-        color: color,
-        barWidth: 2,
-        dotData: const FlDotData(show: false),
-      );
-    }
+  LineChartBarData _buildNormalLineChartBarData(int dataLength, double value, Color color) {
     return LineChartBarData(
       spots: [
-        FlSpot(0, value), // 시작점
-        FlSpot(healthDataList.length.toDouble() - 1, value), // 끝점
+        FlSpot(0, value), // 항상 첫 번째 점은 0
+        FlSpot((dataLength > 10 ? 10 : dataLength).toDouble() - 1,
+            value), // 10개 이상이면 10, 아니면 dataLength를 끝점으로 설정
       ],
       isCurved: false,
       color: color,
@@ -230,11 +275,37 @@ class _HomePageState extends State<HomePage> {
 
   /// 혈압, 혈당 차트의 설명 view
   FlTitlesData _buildTitlesData() {
-    return const FlTitlesData(
-      bottomTitles: AxisTitles(
-        sideTitles: SideTitles(showTitles: false), // X축 타이틀 비표시
+    return FlTitlesData(
+      topTitles: const AxisTitles(
+        sideTitles: SideTitles(showTitles: false),
       ),
-      leftTitles: AxisTitles(
+      bottomTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          interval: 1,
+          getTitlesWidget: (value, meta) {
+            final index = healthDataList.length == 1
+                ? 0
+                : (value / (healthDataList.length - 1) * (healthDataList.length - 1)).toInt();
+
+            if (index >= 0 && index < healthDataList.length) {
+              final date = healthDataList[index].date;
+              final formattedDate = DateFormat('MM/dd').format(date);
+
+              return SideTitleWidget(
+                space: 0.0,
+                axisSide: meta.axisSide,
+                child: Text(formattedDate),
+              );
+            }
+            return SideTitleWidget(
+              axisSide: meta.axisSide,
+              child: const Text(''),
+            );
+          },
+        ), // X축 타이틀 비표시
+      ),
+      leftTitles: const AxisTitles(
         sideTitles: SideTitles(showTitles: false), // Y축 비표시
       ),
     );
