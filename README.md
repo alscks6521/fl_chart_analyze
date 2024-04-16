@@ -1,17 +1,25 @@
-# measurement
+#### Provider 데이터 상태관리를 통해 Chart 및 Calendar 시각화  
+#### 사용 package: "Provder", "fl_chart"  
+#### Provider 코드블록  
+```dart
+class HealthDataProvider with ChangeNotifier {
+  List<HealthData> healthDataList = []; // HealthData 객체 저장 리스트
 
-A new Flutter project.
+  void addHealthData(HealthData data) {
+    healthDataList.add(data);
+    notifyListeners();
+  }
 
-## Getting Started
+  List<HealthData> get data => healthDataList;
+}
+```
+<hr>  
 
-This project is a starting point for a Flutter application.
+#### Chart  
+코드의 중복을 줄이고, 간결하고 재사용성 있게끔 코드 메서드 분리  
+1. chart_page.dart
+2. line_chart.dart
 
-A few resources to get you started if this is your first Flutter project:
+🔵 수축기선 / 🔴 이완기선 / 🟣 혈당선 / 🟢 각 적정선
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# fl_chart_analyze
+<img width="221" alt="image" src="https://github.com/alscks6521/fl_chart_analyze/assets/112923685/1cee2717-41ce-433e-aa27-ecb35631ddcb">
