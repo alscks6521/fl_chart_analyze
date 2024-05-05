@@ -1,8 +1,8 @@
 class HealthData {
-  final DateTime date;
-  final int systolicBP;
-  final int diastolicBP;
-  final int bloodSugar;
+  final DateTime date; // 추가된 날짜
+  final int systolicBP; // 수축기
+  final int diastolicBP; // 이완기
+  final int bloodSugar; // 혈당
 
   HealthData({
     required this.date,

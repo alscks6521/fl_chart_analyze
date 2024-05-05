@@ -70,8 +70,8 @@ class _HomePageState extends State<HomePage> {
     // 입력 값 검증
     if (_formKey.currentState!.validate()) {
       // final now =
-      //     DateTime(randomDay.year, randomDay.month, randomDay.day, randomHour, randomMinute);
-      final now = DateTime(2024, 4, 18, 19, 50, 0, 0, 0);
+      //     DateTime(randomDay.year, randomDay.month, randomDay.day, randomHour, randomMinute, 0, 0, 0);
+      final now = DateTime(2024, 5, randomDay.day, randomHour, randomMinute, 0, 0, 0);
       final systolicBP = int.tryParse(systolicBPController.text) ?? 0;
       final diastolicBP = int.tryParse(diastolicBPController.text) ?? 0;
       final bloodSugar = int.tryParse(bloodSugarController.text) ?? 0;
@@ -97,44 +97,46 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Health Data'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        // 입력 폼
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildInputFields(),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: addHealthData,
-                child: const Text('Add Data'),
-              ),
-              ElevatedButton(
-                onPressed: addHealthData2,
-                child: const Text('날짜 !today'),
-              ),
-              const SizedBox(height: 16.0),
-              MaterialButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ChartPage()),
-                  );
-                },
-                child: const Text('Chart Page'),
-              ),
-              MaterialButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const CalendarPage()),
-                  );
-                },
-                child: const Text('Calendar Page'),
-              )
-            ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          // 입력 폼
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildInputFields(),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: addHealthData,
+                  child: const Text('Add Data'),
+                ),
+                ElevatedButton(
+                  onPressed: addHealthData2,
+                  child: const Text('날짜 !today'),
+                ),
+                const SizedBox(height: 16.0),
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ChartPage()),
+                    );
+                  },
+                  child: const Text('Chart Page'),
+                ),
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CalendarPage()),
+                    );
+                  },
+                  child: const Text('Calendar Page'),
+                )
+              ],
+            ),
           ),
         ),
       ),
