@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:measurement/models/HealthData.dart';
 import 'package:measurement/providers/health_data_provider.dart';

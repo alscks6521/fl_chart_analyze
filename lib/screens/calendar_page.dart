@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:measurement/models/HealthData.dart';
 import 'package:measurement/providers/health_data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -62,8 +59,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
   Widget _customTableCalendar(BuildContext context) {
     return Consumer<HealthDataProvider>(
-      builder: (context, provider, child) {
-        return TableCalendar<HealthData>(
+      builder: (context, healthDataProvider, _) {
+        return TableCalendar(
           locale: "ko_KR",
           focusedDay: _focusedDay ?? DateTime.now(),
           firstDay: DateTime.utc(2010, 10, 16),
@@ -99,7 +96,7 @@ class _CalendarPageState extends State<CalendarPage> {
               shape: BoxShape.rectangle,
             ),
           ),
-          eventLoader: (day) => provider.getDataForDay(day),
+          eventLoader: (day) => healthDataProvider.getDataForDay(day),
           selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
           onDaySelected: (selectedDay, focusedDay) {
             if (!isSameDay(_selectedDay, selectedDay) || !isSameDay(_focusedDay, focusedDay)) {

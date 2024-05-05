@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:measurement/models/HealthData.dart';
 
 class CustomLineChart {
@@ -33,52 +32,54 @@ class CustomLineChart {
 
   /// 혈압, 혈당 차트의 설명 view
   static FlTitlesData buildTitlesData(List<HealthData> healthDataList) {
-    if (healthDataList.isEmpty) {
-      return const FlTitlesData(
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      );
-    }
-    return FlTitlesData(
-      topTitles: const AxisTitles(
-        sideTitles: SideTitles(showTitles: false),
-      ),
-      bottomTitles: AxisTitles(
-        sideTitles: SideTitles(
-          showTitles: true,
-          interval: 1,
-          getTitlesWidget: (value, meta) {
-            final index = healthDataList.length == 1
-                ? 0
-                : (value / (healthDataList.length - 1) * (healthDataList.length - 1)).toInt();
+    return (healthDataList.isEmpty)
+        ? const FlTitlesData(
+            topTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+          )
+        : FlTitlesData(
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                interval: 1,
+                getTitlesWidget: (value, meta) {
+                  final index = healthDataList.length == 1
+                      ? 0
+                      : (value / (healthDataList.length - 1) * (healthDataList.length - 1)).toInt();
 
-            if (index >= 0 && index < healthDataList.length) {
-              final date = healthDataList[index].date;
-              final formattedDate = DateFormat('dd/HH/mm').format(date);
+                  if (index >= 0 && index < healthDataList.length) {
+                    final date = healthDataList[index].date;
+                    final hour = date.hour.toString().padLeft(2, '0');
+                    final day = date.day.toString().padLeft(2, '0');
+                    final formattedDate = '$day/$hour';
 
-              return SideTitleWidget(
-                space: 0.0,
-                axisSide: meta.axisSide,
-                child: Text(formattedDate),
-              );
-            }
-            return SideTitleWidget(
-              axisSide: meta.axisSide,
-              child: const Text(''),
-            );
-          },
-        ), // X축 타이틀 비표시
-      ),
-      leftTitles: const AxisTitles(
-        sideTitles: SideTitles(showTitles: false), // Y축 비표시
-      ),
-    );
+                    return SideTitleWidget(
+                      space: 0.0,
+                      axisSide: meta.axisSide,
+                      child: Text(
+                        formattedDate,
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    );
+                  }
+
+                  return const SizedBox.shrink();
+                },
+              ), // X축 타이틀 비표시
+            ),
+            leftTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false), // Y축 비표시
+            ),
+          );
   }
 }
