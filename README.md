@@ -7,6 +7,15 @@
 - 차트 데이터 입력 10개 이상 넘어가는 데이터는 차트UI에서 지워짐
 - 차트 설명란, 캘린더 디자인 UI 개선
 
+사용패키지:
+
+- fl_chart: ^0.67.0
+- intl: ^0.19.0
+- provider: ^6.1.2
+- table_calendar: ^3.1.1
+
+---
+
 #### Provider 코드블록
 
 사용자 입력처리 받은 건강 정보(HealthData)를 List 형식의 Provider에서 상태관리.
