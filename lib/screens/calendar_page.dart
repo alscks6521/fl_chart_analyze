@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:measurement/providers/health_data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -41,17 +43,24 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            _customTableCalendar(context),
-            const SizedBox(
-              height: 15,
-            ),
-            Flexible(
-              fit: FlexFit.loose,
-              child: _selectedDayDetails(),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Column(
+            children: [
+              _customTableCalendar(context),
+              const SizedBox(
+                height: 15,
+              ),
+              const Divider(
+                height: 1,
+                thickness: 1,
+              ),
+              Flexible(
+                fit: FlexFit.loose,
+                child: _selectedDayDetails(),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -70,7 +79,7 @@ class _CalendarPageState extends State<CalendarPage> {
             formatButtonVisible: false,
             titleCentered: true,
             titleTextStyle: TextStyle(
-              color: Colors.red,
+              color: Color(0xFF276AEE),
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -87,8 +96,8 @@ class _CalendarPageState extends State<CalendarPage> {
             cellMargin: EdgeInsets.zero,
             defaultDecoration: const BoxDecoration(shape: BoxShape.rectangle),
             weekendDecoration: const BoxDecoration(shape: BoxShape.rectangle),
-            selectedDecoration: BoxDecoration(
-              color: Colors.amber.withOpacity(0.9),
+            selectedDecoration: const BoxDecoration(
+              color: Color(0xFF276AEE),
               shape: BoxShape.rectangle,
             ),
             todayDecoration: BoxDecoration(
@@ -133,16 +142,17 @@ class _CalendarPageState extends State<CalendarPage> {
 
   Widget buildEventMarker(int count) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.rectangle,
-        color: Colors.purple[100],
+        color: Colors.red,
       ),
       padding: const EdgeInsets.all(4.0),
       child: Text(
         '$count',
         textAlign: TextAlign.center,
         style: const TextStyle(
-          color: Colors.purple,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
           fontSize: 10.0,
         ),
       ),
@@ -158,11 +168,95 @@ class _CalendarPageState extends State<CalendarPage> {
             ? const Center(child: Text('입력된 데이터가 없어요!'))
             : ListView.separated(
                 itemCount: data.length,
-                itemBuilder: (_, index) => ListTile(
-                  title: Text(
-                      '${index + 1} 측정시간: ${data[index].date.hour}시${data[index].date.minute}분'),
-                  subtitle: Text(
-                      '수축기: ${data[index].systolicBP}, 이완기: ${data[index].diastolicBP}, 혈당: ${data[index].bloodSugar}'),
+                itemBuilder: (_, index) => SizedBox(
+                  height: 100,
+                  child: Row(
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          text: '측정시간\n',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: Color(0xFF276AEE),
+                          ),
+                          children: [
+                            TextSpan(
+                              text: '${data[index].date.hour}시${data[index].date.minute}분',
+                              style: const TextStyle(
+                                color: Color(0xFF606060),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Container(
+                        height: 80,
+                        width: 1,
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RichText(
+                            text: const TextSpan(
+                              text: '혈압 \n',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Color(0xFF606060),
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: '수축 / 이완',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Text(
+                            '혈당',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color(0xFF606060),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        width: 40,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${data[index].systolicBP} / ${data[index].diastolicBP}',
+                            style: const TextStyle(fontSize: 24),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            '${data[index].bloodSugar}',
+                            style: const TextStyle(fontSize: 24),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 separatorBuilder: (_, __) => const Divider(),
               );

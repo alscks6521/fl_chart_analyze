@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:measurement/models/HealthData.dart';
 import 'package:measurement/providers/health_data_provider.dart';
 import 'package:measurement/widgets/chart_widhget.dart';
@@ -27,12 +28,85 @@ class ChartPage extends StatelessWidget {
                             child: buildBloodPressureChart(healthDataList, context),
                           ),
                           const SizedBox(
+                            height: 15,
+                          ),
+                          Align(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 10,
+                                      height: 10,
+                                      color: Colors.green,
+                                    ),
+                                    const Text('안전 수축기'),
+                                    Container(
+                                      width: 10,
+                                      height: 10,
+                                      color: Colors.blue,
+                                    ),
+                                    const Text('수축기'),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 10,
+                                      height: 10,
+                                      color: Colors.red,
+                                    ),
+                                    const Text('안전 이완기'),
+                                    Container(
+                                      width: 10,
+                                      height: 10,
+                                      color: Colors.orange,
+                                    ),
+                                    const Text('이완기'),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
                             height: 50,
                           ),
                           SizedBox(
                             height: 250,
                             child: buildBloodSugarChart(healthDataList, context),
                           ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Align(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 10,
+                                      height: 10,
+                                      color: Colors.green,
+                                    ),
+                                    const Text('안전 혈당'),
+                                    Container(
+                                      width: 10,
+                                      height: 10,
+                                      color: Colors.purple,
+                                    ),
+                                    const Text('혈당'),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       )
                     : const Center(child: Text('혹시 데이터를 추가하셨나요?')),
@@ -48,7 +122,7 @@ class ChartPage extends StatelessWidget {
     return ChartHelper.buildChart(
       healthDataList: healthDataList,
       context: context,
-      lineColors: [Colors.blue, Colors.red], // 수축기와 이완기 혈압에 대한 색상
+      lineColors: [Colors.blue, Colors.orange], // 수축기와 이완기 혈압에 대한 색상
       normalValues: [200, 120, 80], // 수축기와 이완기 혈압의 정상값
       valueExtractors: [
         (HealthData data) => data.systolicBP.toDouble(),

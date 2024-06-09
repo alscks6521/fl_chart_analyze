@@ -109,11 +109,11 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: addHealthData,
-                  child: const Text('Add Data'),
+                  child: const Text('무작위 날짜 추가'),
                 ),
                 ElevatedButton(
                   onPressed: addHealthData2,
-                  child: const Text('날짜 !today'),
+                  child: const Text('오늘 날짜 추가'),
                 ),
                 const SizedBox(height: 16.0),
                 MaterialButton(

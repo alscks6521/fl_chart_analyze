@@ -20,7 +20,6 @@ class HealthDataProvider with ChangeNotifier {
     return _healthDataMap[dateKey] ?? [];
   }
 
-  //TODO
   // 파이어베이스 데이터 불러오기
   Future<void> loadDataFromFirebase() async {
     // 파이어베이스에서 데이터를 가져오는 로직 구현
